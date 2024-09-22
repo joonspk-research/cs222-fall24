@@ -1,0 +1,111 @@
+body {
+    padding:5em;
+}
+.lecture_date { 
+    font-weight:600;
+}
+.lecture_date span {
+    font-weight:300;
+}
+.lecture_week {
+    font-weight:600;
+}
+.lecture_titles {
+    font-weight:600;
+}
+.req_readings {
+    font-weight:600;
+}
+h3 {
+    margin-top:1.5em;
+}
+.assignment_release {
+    color:blue;
+}
+.assignment_due {
+    color:red;
+}
+
+a,a:hover {
+    color: #990615;
+    text-decoration: none;
+}
+
+a:hover {
+   text-decoration: underline;
+}
+
+/* Name card */
+.namecard-container {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 1em;
+  padding: 1em;
+}
+
+.namecard {
+  display: flex;
+  align-items: center;
+  padding: 1.5em;
+  border: 1px solid #ccc;
+  border-radius: 15px;
+  background-color: #f9f9f9;
+}
+
+.profile-photo img {
+  width: 80px;
+  height: 80px;
+  border-radius: 50%;
+}
+
+.profile-details {
+  margin-left: 1em;
+}
+
+.profile-details a {
+  font-size: 1.2em;
+  font-weight: bold;
+  color: #333;
+/*  text-decoration: none;*/
+}
+
+.profile-details p {
+  margin: 0.2em 0;
+  font-size: 0.9em;
+  color: #666;
+}
+
+@media (max-width: 768px) {
+  .namecard-container {
+    grid-template-columns: 1fr;
+  }
+}
+/* End name card */
+
+
+
+/* Nav */
+.header-row {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 1em 0;
+/*  border-bottom: 1px solid #ddd;*/
+}
+
+.course-info h5 {
+  margin: 0;
+  font-size: 1em;
+}
+
+.nav-links a {
+  text-decoration: none;
+  color: #990615;
+  margin-left: 1em;
+}
+
+.nav-links a:hover {
+  text-decoration: underline;
+}
+/* End Nav */
+
