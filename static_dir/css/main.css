@@ -35,21 +35,46 @@ a:hover {
    text-decoration: underline;
 }
 
+
+
+
 /* Name card */
 .namecard-container {
   display: grid;
-  grid-template-columns: repeat(3, 1fr);
+  grid-template-columns: 1fr 2fr; /* 1:2 ratio for namecard and namecard-2x */
   gap: 1em;
   padding: 1em;
 }
 
-.namecard {
-  display: flex;
-  align-items: center;
-  padding: 1.5em;
+.namecard, .namecard-2x {
   border: 1px solid #ccc;
   border-radius: 15px;
   background-color: #f9f9f9;
+  overflow: hidden; /* Ensures the header doesn't overflow the rounded corners */
+}
+
+.namecard-header {
+  background-color: #990615; 
+  color: white;
+  padding: 0.5em 1em;
+  margin: 0;
+  width: 100%;
+}
+
+.namecard-content {
+  padding: 1.5em;
+}
+
+.namecard .namecard-content {
+  display: flex;
+  align-items: center;
+}
+
+.namecard-2x .namecard-content {
+  display: grid;
+  grid-template-columns: auto 1fr auto 1fr; /* For photo, details, photo, details */
+  gap: 1em;
+  align-items: center;
 }
 
 .profile-photo img {
@@ -66,7 +91,7 @@ a:hover {
   font-size: 1.2em;
   font-weight: bold;
   color: #333;
-/*  text-decoration: none;*/
+  text-decoration: none;
 }
 
 .profile-details p {
@@ -79,8 +104,22 @@ a:hover {
   .namecard-container {
     grid-template-columns: 1fr;
   }
+  
+  .namecard-2x .namecard-content {
+    grid-template-columns: auto 1fr;
+  }
+  
+  .namecard-2x .namecard-content > :nth-child(3),
+  .namecard-2x .namecard-content > :nth-child(4) {
+    margin-top: 1em;
+  }
 }
 /* End name card */
+
+
+
+
+
 
 
 
