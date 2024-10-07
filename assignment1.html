@@ -1,0 +1,253 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <!-- Meta tags -->
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+    <title>CS 222: AI Agents and Simulations</title>  
+
+    <!-- Bootstrap, Font Awesome, Aminate, Owl Carausel, Normalize CSS -->
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" integrity="sha384-QWTKZyjpPEjISv5WaRU9OFeRpok6YctnYmDr5pNlyT2bRjXh0JMhjY6hW+ALEwIH" crossorigin="anonymous">
+    <link rel="stylesheet" href="static_dir/css/main.css">
+
+    <style>
+        body { font-family: Arial, sans-serif; line-height: 1.6; color: #333; max-width: 800px; margin: 0 auto; padding: 20px; }
+        h1, h2, h3 { color: #990615; }
+        code { background-color: #f4f4f4; padding: 2px 4px; border-radius: 4px; }
+        pre { background-color: #f4f4f4; padding: 10px; border-radius: 4px; overflow-x: auto; }
+        table { border-collapse: collapse; width: 100%; margin-bottom: 20px; }
+        th, td { border: 1px solid #ddd; padding: 8px; text-align: left; }
+        th { background-color: #f2f2f2; }
+    </style>
+
+    <!-- Favicon -->
+    <link rel="apple-touch-icon" sizes="180x180" href="static_dir/favicon_io/apple-touch-icon.png">
+    <link rel="icon" type="image/png" sizes="32x32" href="static_dir/favicon_io/favicon-32x32.png">
+    <link rel="icon" type="image/png" sizes="16x16" href="static_dir/favicon_io/favicon-16x16.png">
+    <link rel="manifest" href="static_dir/favicon_io/site.webmanifest">
+</head>
+<body>
+    <h1 style="margin-bottom:0em; padding-top:2em"><a href="index.html"><strong style="font-weight:700">CS 222:</strong> AI Agents and Simulations</a></h1>
+    <div class="header-row" style="margin-bottom:2em; padding-top:1.5em">
+      <div class="course-info">
+        <h5>STANFORD UNIVERSITY, FALL 2024</h5>
+        <h5><strong>Location:</strong> M W 01:30p-02:50p; Lathrop Library, Rm 299</h5>
+        <h5 style="margin-top:0.4em"><strong>Contact:</strong> cs222-ai-simulations@cs.stanford.edu</h5>
+      </div>
+    </div>
+
+
+    <h2>Assignment 1: Creating Generative Agents</h2>
+
+    <h3>Learning Goal</h3>
+    <p>This assignment aims to provide you with hands-on experience in implementing core modules of generative agents, as discussed in class. You will focus on creating agents that store and synthesize memories from their experiences, and retrieve relevant information based on interactive contexts. The end product will be a generative agent chatbot capable of conversing with you using the memories you've instilled in it.</p>
+
+    <h3>Part 0: OpenAI API Key</h3>
+    <ol>
+        <li>Create an OpenAI account using your Stanford Network ID at <a href="https://platform.openai.com/api-keys">https://platform.openai.com/api-keys</a></li>
+        <li>You will be added to our organization account for API access.</li>
+        <li>Contact the TAs if you have difficulty accessing the model.</li>
+        <li>The class has a shared budget of $400 (approximately $8 per student).</li>
+        <li>Monitor your token usage at <a href="https://platform.openai.com/usage">https://platform.openai.com/usage</a> to avoid depleting the shared budget.</li>
+    </ol>
+
+    <h3>Part 1: Setting up the Directory</h3>
+    <ol>
+        <li>Clone the assignment repository: <code>https://github.com/joonspk-research/gabm-stanford-cs222</code></li>
+        <li>Set up a Python virtual environment:
+            <pre><code>python3 -m venv myenv
+source myenv/bin/activate  # On Windows, use `myenv\Scripts\activate`</code></pre>
+        </li>
+        <li>Install required packages: <code>pip install -r requirements.txt</code></li>
+        <li>Create a <code>settings.py</code> file in the <code>simulation_engine</code> directory with the following content:
+            <pre><code>import sys
+import os
+from pathlib import Path
+
+OPENAI_API_KEY = "[Fill in: Your OpenAI API Key]"
+KEY_OWNER = "[Fill in: Your name]"
+DEBUG = True
+MAX_CHUNK_SIZE = 4
+LLM_VERS = "gpt-4o-mini"
+BASE_DIR = f"{Path(__file__).resolve().parent.parent}"
+POPULATIONS_DIR = f"{BASE_DIR}/agent_bank/populations"
+LLM_PROMPT_DIR = f"{BASE_DIR}/simulation_engine/prompt_template"</code></pre>
+        </li>
+        <li>Ensure <code>settings.py</code> is listed in your <code>.gitignore</code> file to protect your API key.</li>
+    </ol>
+
+    <h3>Part 1.5: Repository Structure</h3>
+    <ul>
+        <li><code>agent_bank</code>: Stores agent information and memories (database-like function).</li>
+        <li><code>generative_agent</code>: Contains core logic and algorithms for agent behaviors and interactions.</li>
+    </ul>
+    <p>You will primarily edit code in the <code>generative_agent</code> folder and save your agents in the <code>agent_bank</code> folder.</p>
+
+    <h3>Part 2: Implement the Retrieval Function</h3>
+    <p>Implement three functions in <code>generative_agent/modules/memory_stream</code>:</p>
+    <ol>
+        <li><code>extract_recency</code>: Calculate a recency score for each memory node based on last access time.</li>
+        <li><code>extract_importance</code>: Extract the pre-calculated importance score for each memory node.
+            <ul>
+                <li>Write the LLM prompt for generating scores in <code>simulation_engine/prompt_template/generative_agent/memory_stream/importance_score/*.txt</code></li>
+            </ul>
+        </li>
+        <li><code>extract_relevance</code>: Calculate the relevance of each memory node to a given focal point using cosine similarity of vector embeddings.</li>
+    </ol>
+
+    <h3>Part 3: Implement the Chat Interaction</h3>
+    <p>Implement key functions for dialogue engagement in <code>generative_agent/modules/interaction</code>:</p>
+    <ol>
+        <li><code>_utterance_agent_desc</code>: Generate a description of the agent, including self-description, speech pattern, and relevant memories.</li>
+        <li>Create the prompt template: <code>simulation_engine/prompt_template/generative_agent/interaction/utterance/utterance_v1.txt</code></li>
+    </ol>
+    <p>Remember to test your prompts using the ChatGPT web interface for optimal results.</p>
+
+    <h3>Part 4: Interacting with Your Agents</h3>
+    <p>To test your agents' fidelity, you will develop and interact with the "Matthew Jacobs" agent, a synthetic persona built with ChatGPT.</p>
+    
+    <h4>4.1 Loading Memories</h4>
+    <ol>
+        <li>Initialize the agent:
+            <pre><code>GenerativeAgent("SyntheticCS222_Base", "matthew_jacobs")</code></pre>
+        </li>
+        <li>Load memories from <code>memories/matthew_jacobs_memories.py</code>:
+            <pre><code>for m in matthew_memories:
+    curr_agent.remember(m)
+curr_agent.save("SyntheticCS222", "matthew_jacobs")</code></pre>
+        </li>
+    </ol>
+
+    <h4>4.2 Interviewing the Agent</h4>
+    <p>Conduct a stateless chat session with your agent using the following question sets:</p>
+    <h5>Factual Questions:</h5>
+    <pre><code>factual_questions = [
+    "What business did you start after working for a larger firm?",
+    "What political group did you join, and what beliefs did you strengthen through this association?",
+    "How did the 2008 housing crisis impact your real estate business?",
+    "How long were you married to your college girlfriend before you divorced?",
+    "What role did you hold during high school that taught you leadership and responsibility?",
+    "What degree did you earn from the University of Texas, and how did it shape your career?",
+    "What personal challenge did you face during the COVID-19 pandemic?",
+    "What health issue prompted you to focus more on your physical health?",
+    "How did your relationship with your daughter change as she grew older?",
+    "What was your long-time dream related to property ownership, and how did you fulfill it?"
+]</code></pre>
+
+    <h5>Reflective Questions:</h5>
+    <pre><code>reflective_questions = [
+    "How has your upbringing in rural Texas, learning to hunt and fish with your father, shaped your values and worldview?",
+    "In what ways did your experience as captain of your high school football team influence your leadership style in your professional and personal life?",
+    "How has your divorce and your evolving relationship with your daughter impacted your sense of responsibility and personal fulfillment?",
+    "How have your libertarian beliefs influenced your approach to managing your real estate business and navigating financial challenges?",
+    "How has your experience with failure, such as losing the election for local office, affected your sense of purpose and resilience?"
+]</code></pre>
+
+    <h4>4.3 Recording Responses</h4>
+    <ol>
+        <li>Record the agent's responses in a CSV file:
+            <ul>
+                <li>First column: Question</li>
+                <li>Second column: Agent's response</li>
+            </ul>
+        </li>
+        <li>Save the file as: <code>cs222_assignment_1/report/matthew_jacobs/answers__matthew_jacobs.csv</code></li>
+    </ol>
+
+    <h4>4.4 Storing Retrieved Memories</h4>
+    <ol>
+        <li>For each question, store the top 10 retrieved memories in a dictionary:
+            <ul>
+                <li>Key: Original question</li>
+                <li>Value: List of 10 retrieved memories</li>
+            </ul>
+        </li>
+        <li>Save this dictionary as a JSON file: <code>cs222_assignment_1/report/matthew_jacobs/retrieved__matthew_jacobs.json</code></li>
+    </ol>
+
+    <h4>Example Format for Retrieved Memories:</h4>
+    <pre><code>{
+    "What sparked your lifelong passion for nature?": [
+        "As a child, Jasmine spent countless weekends with her grandmother, exploring the forests and learning about local plant species, sparking her lifelong passion for nature.",
+        "Jasmine's experience with burnout led her to take a brief sabbatical, where she traveled to national parks across the U.S., reconnecting with nature.",
+        // ... (8 more memories)
+    ],
+    "What was your first experience with environmental activism?": [
+        "In high school, Jasmine joined the Environmental Club and organized a school-wide recycling initiative, marking her first experience in environmental activism.",
+        "A pivotal moment came when Jasmine led a protest against a major corporation's pollution in her city, which garnered media attention and increased her local visibility as an activist.",
+        // ... (8 more memories)
+    ],
+    // ... (more questions and their associated memories)
+}</code></pre>
+
+    <h3>Part 5: Reflection</h3>
+    <p>Write a couple of paragraphs describing your thoughts on the retrieval function, including:</p>
+    <ul>
+        <li>Whether it was retrieving the right information</li>
+        <li>What distinguishes the memories that are considered "important" versus not</li>
+    </ul>
+
+    <h3>Grading</h3>
+    <p>This assignment will be graded out of 10 points. The breakdown is as follows:</p>
+    
+    <table>
+        <thead>
+            <tr>
+                <th>Component</th>
+                <th>Points</th>
+                <th>Criteria</th>
+            </tr>
+        </thead>
+        <tbody>
+            <tr>
+                <td rowspan="3">Retrieval</td>
+                <td>5</td>
+                <td>80% of the retrieved memories for each question matches the goldstandard retrieved memories</td>
+            </tr>
+            <tr>
+                <td>3</td>
+                <td>60% of the retrieved memories for each question matches the goldstandard retrieved memories</td>
+            </tr>
+            <tr>
+                <td>1</td>
+                <td>40% of the retrieved memories for each question matches the goldstandard retrieved memories</td>
+            </tr>
+            <tr>
+                <td rowspan="3">Chat responses</td>
+                <td>3</td>
+                <td>The agent responses closely align with the memories that were provided in the assignment</td>
+            </tr>
+            <tr>
+                <td>2</td>
+                <td>The agent responses somewhat align with the memories that were provided in the assignment</td>
+            </tr>
+            <tr>
+                <td>1</td>
+                <td>The agent responses weakly align with the memories that were provided in the assignment</td>
+            </tr>
+            <tr>
+                <td rowspan="3">Response (Reflection)</td>
+                <td>3</td>
+                <td>Puts forward a plausible and thoughtful analysis as to why the elements that were retrieved were retrieved, and what distinguishes the important memories</td>
+            </tr>
+            <tr>
+                <td>2</td>
+                <td>Explains the types of elements that were retrieved and what distinguishes the important memories</td>
+            </tr>
+            <tr>
+                <td>1</td>
+                <td>Reports what questions were retrieved/considered important but with no reflection on whether they were plausible explanations</td>
+            </tr>
+            <tr>
+                <td>Coding style</td>
+                <td>1</td>
+                <td>The code written is clean, readable, and well-structured</td>
+            </tr>
+        </tbody>
+    </table>
+
+    <p>Total possible points: 12 (11s points for the assignment, 1 bonus point for coding style)</p>
+
+
+</body>
+</html>
