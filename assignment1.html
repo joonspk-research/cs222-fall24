@@ -190,7 +190,12 @@ curr_agent.save("SyntheticCS222", "matthew_jacobs")</code></pre>
 
     <div class="extra-credit">
         <h3>Extra Credit (1 pt bonus)</h3>
-        <p>Try implementing retrieval from scratch! In this optional extension, you'll be given a text file with 12 paragraphs of information that may or may not be related to a vanilla cake recipe. By retrieving the 2 relevant items, you'll be able to watch Isabella bake a cake and earn up to 1 point of extra credit.</p>
+        <p>Try implementing retrieval from scratch! In this optional extension, you'll be given a text file with 12 paragraphs of information that may or may not be related to a vanilla cake recipe. By retrieving the 2 relevant items, you'll be able to watch Isabella bake a cake and earn up to 1 point of extra credit (1 for successful task completion - 0.1 for each irrelevant memory retrieved).</p>
+        <ul>
+            <li>Earlier, you implemented a retrieval function that returned a static number of retrieved memories. Can we make this more flexible by exclusively retrieving memories that are necessary for the task at hand, while excluding memories that are not?</li>
+            <li>Start by running <code>bonus-app.py</code> -- this will start a Flask app (check your terminal for the URL) where you can watch the agent attempt the baking task. Also, take a look at the <code>/cs222_assignment_1_bonus/isabella/memory/cake.txt</code> file to see the data you are working with.</li>
+            <li>Once you've implemented the retrieval function in <code>/bonus-agent.py</code>, you can refresh the page and run the simulation again to see the agent's progress. The <code>retrieve()</code> method in <code>/bonus-agent.py</code> file is the only thing you will need to edit for this part!</li>
+        </ul>
         <p style="text-align: center;">
             <img src="static_dir/img/Isabella.gif" style="width:50%; border-radius: 8%;">
         </p>
@@ -200,9 +205,9 @@ curr_agent.save("SyntheticCS222", "matthew_jacobs")</code></pre>
         <h3>Submission</h3>
         <p>Submit the following on Gradescope:</p>
         <ul>
-            <li>Both files in 'report/matthew_jacobs/'</li>
-            <li>'report/report.txt'</li>
-            <li>If you completed the optional extra credit, submit the 'a1-bonus/agent.py' file</li>
+            <li>Both files in <code>/report/matthew_jacobs/</code></li>
+            <li><code>/report/report.txt</code></li>
+            <li>If you completed the optional extra credit, submit the <code>/bonus-agent.py</code> file</li>
         </ul>
     </div>
 
